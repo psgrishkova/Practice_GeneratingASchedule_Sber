@@ -13,6 +13,7 @@ public class Student {
         this.name = name;
         studyPlan=new ArrayList<>();
         stud_id++;
+        timeTable=new TimeTable();
     }
 
     public void setStudyPlan(Subject... subjects) {
@@ -47,5 +48,9 @@ public class Student {
         }
 
         return res;
+   }
+
+   public void editTimeTable(Lesson...lessons){
+        timeTable.setLessons(lessons);
    }
 }

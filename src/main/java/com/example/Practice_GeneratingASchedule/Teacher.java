@@ -7,11 +7,13 @@ public class Teacher {
     private static int teacherID=0;
     private String teacherName;
     private List<Subject> subjects;
+    private TimeTable timeTable;
 
     public Teacher(String teacherName) {
         this.teacherName = teacherName;
         subjects=new ArrayList<>();
         teacherID++;
+        timeTable=new TimeTable();
     }
     public void setSubjects(Subject...subjects){
         for (Subject s:
@@ -30,6 +32,14 @@ public class Teacher {
 
     public List<Subject> getSubjects() {
         return subjects;
+    }
+
+    public TimeTable getTimeTable() {
+        return timeTable;
+    }
+
+    public void editTimeTable(Lesson...lessons){
+        timeTable.setLessons(lessons);
     }
 
     public String toString(){

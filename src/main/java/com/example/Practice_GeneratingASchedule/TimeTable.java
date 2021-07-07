@@ -10,10 +10,7 @@ public class TimeTable {
     public TimeTable(Lesson... lessons) {
         timeTableID++;
         this.lessons = new ArrayList<>();
-        for (Lesson l :
-                lessons) {
-            this.lessons.add(l);
-        }
+        setLessons(lessons);
     }
 
     public static int getTimeTableID() {
@@ -22,6 +19,12 @@ public class TimeTable {
 
     public List<Lesson> getLessons() {
         return lessons;
+    }
+    public void setLessons(Lesson...lessons){
+        for (Lesson l :
+                lessons) {
+            this.lessons.add(l);
+        }
     }
 
     public String toString() {

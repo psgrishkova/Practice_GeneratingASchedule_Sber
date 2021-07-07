@@ -1,42 +1,60 @@
 package com.example.Practice_GeneratingASchedule;
 
-import com.github.javafaker.Faker;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
+
 import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
 
 //@SpringBootTest
 class PracticeGeneratingAScheduleApplicationTests {
 
+
     @Test
-    public void generatingASchedule() {
-
-        Subject s = new Subject("Information Security");
-        System.out.println(s);
-
-        Faker faker = new Faker();
-        Auditorium auditorium = new Auditorium();
-        Student student = new Student(faker.name().name());
-        Teacher teacher = new Teacher(faker.funnyName().name());
-        student.setStudyPlan(s);
-        teacher.setSubjects(s);
-        System.out.println(student);
-        System.out.println(teacher);
-        Lesson lesson = new Lesson(teacher, s, student);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2021, 8, 9, 8, 0, 0);
-        lesson.setStartLessonDate(calendar);
-        System.out.println(lesson.toString());
-        TimeTable timeTable = new TimeTable(lesson);
-        System.out.println(timeTable.toString());
-        Subject s1=new Subject("Math");
-        timeTable.getLessons().stream().filter(s-> s.getSubject().getNameOfSubject().equals("Math"));
-
+    void testingPassage() {
+        Generating g = new Generating();
+        g.getCurrentDate().set(2021, 7, 8, 8, 0, 0);
+        g.setCurrentDate(g.getCurrentDate());
+        g.passageOfTime();
+        Calendar testCalendar = Calendar.getInstance();
+        testCalendar.set(2021, 7, 8, 9, 30, 0);
+        System.out.println(g.getCurrentDate().getTime());
+        System.out.println(testCalendar.getTime());
+        Assert.assertEquals(testCalendar.getTime().toString(), g.getCurrentDate().getTime().toString());
     }
 
+    @Test
+    void testingFreeTeachers(){
+       Data data=new Data();
+       Generating generating=new Generating();
+       generating.setTeachers(data.teachers.get(0));
 
+       Assert.assertEquals(1,generating.getFreeTeachers("Math").size());
+    }
+
+    @Test
+    void testingFreeAuditoriums(){
+        Data data=new Data();
+        Generating generating=new Generating();
+        generating.setAuditoriums(data.auditoriums.get(0));
+        Assert.assertEquals(1,generating.getFreeAuditoriums().size());
+    }
+
+    @Test
+    void testingCreateNewLesson(){
+        Data data=new Data();
+        Generating generating=new Generating();
+
+        generating.setTeachers(data.teachers.get(0));
+        generating.setStudents(data.students.get(0));
+        generating.setAuditoriums(data.auditoriums.get(0));
+
+        Calendar calendar=Calendar.getInstance();
+        calendar.set(2021, 7, 8, 8, 0, 0);
+        generating.setCurrentDate(calendar);
+
+        generating.generatingNewLesson();
+
+        System.out.print(generating.getStudents().get(0).getTimeTable().getLessons().get(0));
+    }
 }

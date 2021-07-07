@@ -38,6 +38,10 @@ public class Lesson {
         this.startLessonDate = startLessonDate;
     }
 
+    public void setAuditorium(Auditorium auditorium) {
+        this.auditorium = auditorium;
+    }
+
     public Lesson(Teacher teacher, Subject subject, Student... students) {
         this.students=new ArrayList<>();
         for (Student s:
@@ -49,8 +53,10 @@ public class Lesson {
     }
 
     public String toString(){
-        String result="time:"+startLessonDate.getTime().toString()+"\t"+"Au№"+auditorium.getAuditoriumNumber()+"\t"+
-                "PrepName: "+teacher.getTeacherName()+"\t"+"Predm: "+subject.getNameOfSubject()+"\t"+"Studs:";
+        String result="time:"+startLessonDate.getTime().toString()+"\n"
+                +"auditorium №: "+auditorium.getAuditoriumNumber()+"\n"+
+                "TeacherName: "+teacher.getTeacherName()+"\n"+"Subject: "+subject.getNameOfSubject()+"\n"
+                +"Studs:";
         for (Student s:
              students) {
             result+="\n"+s.getName();

@@ -4,14 +4,26 @@ import java.util.Date;
 import java.util.List;
 
 public class Auditorium {
-    private static int auditoriumNumber=1;
-    private List<Date> occupied;
+    private static int auditoriumNumber = 1;
+    private TimeTable timeTable;
 
-    public  static int getAuditoriumNumber() {
+    public Auditorium() {
+        timeTable = new TimeTable();
+        auditoriumNumber++;
+    }
+
+    public static int getAuditoriumNumber() {
         return auditoriumNumber;
     }
 
-    public List<Date> getOccupied() {
-        return occupied;
+    public TimeTable getTimeTable() {
+        return timeTable;
     }
+
+
+
+    public void editTimeTable(Lesson...lessons){
+        timeTable.setLessons(lessons);
+    }
+
 }
