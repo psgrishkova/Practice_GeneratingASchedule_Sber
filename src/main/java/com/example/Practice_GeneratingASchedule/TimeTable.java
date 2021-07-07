@@ -1,8 +1,35 @@
 package com.example.Practice_GeneratingASchedule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TimeTable {
-    private String timeTableID;
+    private static int timeTableID = 0;
     private List<Lesson> lessons;
+
+    public TimeTable(Lesson... lessons) {
+        timeTableID++;
+        this.lessons = new ArrayList<>();
+        for (Lesson l :
+                lessons) {
+            this.lessons.add(l);
+        }
+    }
+
+    public static int getTimeTableID() {
+        return timeTableID;
+    }
+
+    public List<Lesson> getLessons() {
+        return lessons;
+    }
+
+    public String toString() {
+        String result = timeTableID + "\t";
+        for (Lesson l:
+             lessons) {
+            result+=l.toString()+"\n";
+        }
+        return result;
+    }
 }
