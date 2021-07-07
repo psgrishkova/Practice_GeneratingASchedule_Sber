@@ -72,17 +72,19 @@ public class Generating {
 
     public void generatingNewLesson() {
         Student student = students.get(0);
+
+
         //(работет)  проверить, сободно ли у студента currentDate, если нет, перейти к след паре и тд
-        if (!student.getTimeTable().getLessons().stream()
-                .anyMatch(lesson -> lesson.getStartLessonDate().toString()
-                        .equals(currentDate.toString()))) {
+        //if (!student.getTimeTable().getLessons().stream()
+        //        .anyMatch(lesson -> lesson.getStartLessonDate().toString()
+        //                .equals(currentDate.toString()))) {
 
             //берем предмет, который нужно провести
             Subject currentSubject = student.getStudyPlan().get(0);
             if(isPlanComplete(student,currentSubject.getNameOfSubject())){
                 currentSubject=student.getStudyPlan().get(1);
             }
-
+            List<Student> freeStudents=getFreeStudents(currentSubject.getNameOfSubject());
 
             //отобрать преподов по предмету
             List<Teacher> freeTeacher=getFreeTeachers(currentSubject.getNameOfSubject());
@@ -93,24 +95,27 @@ public class Generating {
 
             //если препод и аудитория нашлись, то можно добавлять в расписание
             if (freeTeacher.size() != 0 && freeAuditoriums.size() != 0) {
-                Lesson lesson = new Lesson(freeTeacher.get(0), currentSubject, student);
+                Lesson lesson = new Lesson(freeTeacher.get(0), currentSubject, freeStudents.toArray(Student[]::new));
                 lesson.setStartLessonDate(currentDate);
                 lesson.setAuditorium(freeAuditoriums.get(0));
 
                 //созданную пару добавили всем в расписание
-                student.editTimeTable(lesson);
+                for (Student s:
+                     students) {
+                    s.editTimeTable(lesson);
+                }
                 freeTeacher.get(0).editTimeTable(lesson);
                 freeAuditoriums.get(0).editTimeTable(lesson);
             } else {
                 //перебирать время до конца недели
             }
             passageOfTime();
-        }
+       // }
         //иначе нужно взять другое время
-        else {
-            passageOfTime();
-            generatingNewLesson();
-        }
+       // else {
+       //     passageOfTime();
+      //      generatingNewLesson();
+     //   }
     }
 
 
@@ -118,9 +123,6 @@ public class Generating {
         List<Teacher> freeTeacher = teachers.stream()
                 .filter(teacher -> teacher.getSubjects().stream()
                         .anyMatch(subject -> subject.getNameOfSubject().equals(currentSubjectName))).collect(Collectors.toList());
-
-
-
         //исключить из списка преподов, у которых занято это время
         for (Teacher teacher :
                 freeTeacher) {
@@ -148,5 +150,21 @@ public class Generating {
 
     public boolean isPlanComplete(Student student, String subjectTitle){
        return student.getTimeTable().getLessons().stream().anyMatch(lesson -> lesson.getSubject().getNameOfSubject().equals(subjectTitle));
+    }
+
+    public List<Student> getFreeStudents(String currentSubjectName){
+        List<Student> freeStudents = students.stream()
+                .filter(student -> student.getStudyPlan().stream()
+                        .anyMatch(subject -> subject.getNameOfSubject().equals(currentSubjectName))).collect(Collectors.toList());
+        //исключить из списка студентов, у которых занято это время
+        for (Student student :
+                freeStudents) {
+            if (student.getTimeTable().getLessons().stream()
+                    .anyMatch(lesson -> lesson.getStartLessonDate().toString()
+                            .equals(currentDate.toString()))) {
+                freeStudents.remove(student);
+            }
+        }
+        return freeStudents;
     }
 }

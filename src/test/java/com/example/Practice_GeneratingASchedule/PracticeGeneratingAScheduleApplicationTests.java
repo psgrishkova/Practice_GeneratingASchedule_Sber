@@ -43,17 +43,19 @@ class PracticeGeneratingAScheduleApplicationTests {
         Data data=new Data();
         Generating generating=new Generating();
 
-        generating.setTeachers(data.teachers.get(0));
-        generating.setStudents(data.students.get(0));
-        generating.setAuditoriums(data.auditoriums.get(0));
+        generating.setTeachers(data.teachers.toArray(Teacher[]::new));
+        generating.setStudents(data.students.toArray(Student[]::new));
+        generating.setAuditoriums(data.auditoriums.toArray(Auditorium[]::new));
 
         LocalDateTime calendar=LocalDateTime.of(2021,7,8,8,0,0);
         generating.setCurrentDate(calendar);
 
         generating.generatingNewLesson();
+        System.out.println(generating.getStudents().get(0).getTimeTable().getLessons().get(0)+"\n");
         generating.generatingNewLesson();
+        System.out.println(generating.getStudents().get(0).getTimeTable().getLessons().get(1));
 
-        System.out.print(generating.getStudents().get(0).getTimeTable().getLessons().get(0));
+
     }
 
     @Test

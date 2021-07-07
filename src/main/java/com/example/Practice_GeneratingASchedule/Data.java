@@ -31,13 +31,13 @@ public class Data {
         }
         subjects.add(new Subject("Math"));
         subjects.add(new Subject("Geom"));
-        subjects.add(new Subject("IS"));
+        //subjects.add(new Subject("IS"));
 
 
         students.get(0).setStudyPlan(subjects.get(0),subjects.get(1));
-        students.get(1).setStudyPlan(subjects.get(0),subjects.get(2));
+        students.get(1).setStudyPlan(subjects.get(0));
 
-        teachers.get(0).setSubjects(subjects.get(0),subjects.get(2));
+        teachers.get(0).setSubjects(subjects.get(0));
         teachers.get(1).setSubjects(subjects.get(0),subjects.get(1));
 
 
