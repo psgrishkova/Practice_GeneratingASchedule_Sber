@@ -1,29 +1,30 @@
 package com.example.Practice_GeneratingASchedule;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Generating {
-    private Calendar currentDate;
+    private LocalDateTime currentDate;
     private List<Student> students;
     private List<Teacher> teachers;
     private List<Auditorium> auditoriums;
 
 
     public Generating() {
-        currentDate = Calendar.getInstance();
+
         teachers = new ArrayList<>();
         students = new ArrayList<>();
         auditoriums=new ArrayList<>();
     }
 
-    public Calendar getCurrentDate() {
+    public LocalDateTime getCurrentDate() {
         return currentDate;
     }
 
-    public void setCurrentDate(Calendar currentDate) {
+    public void setCurrentDate(LocalDateTime currentDate) {
         this.currentDate = currentDate;
     }
 
@@ -61,12 +62,11 @@ public class Generating {
     }
 
     public void passageOfTime() {
-        if (currentDate.get(Calendar.HOUR_OF_DAY) < 12)
-            currentDate.add(Calendar.MINUTE, 90);
+        if (currentDate.getHour() < 12)
+            currentDate=currentDate.plusMinutes(90);
         else {
-            currentDate.add(Calendar.DAY_OF_YEAR, 1);
-            currentDate.set(Calendar.HOUR_OF_DAY, 8);
-            currentDate.set(Calendar.MINUTE, 0);
+           currentDate= currentDate.plusDays(1);
+            currentDate= LocalDateTime.of(currentDate.getYear(),currentDate.getMonth(),currentDate.getDayOfMonth(),8,0,0);
         }
     }
 
@@ -74,10 +74,15 @@ public class Generating {
         Student student = students.get(0);
         //(работет)  проверить, сободно ли у студента currentDate, если нет, перейти к след паре и тд
         if (!student.getTimeTable().getLessons().stream()
-                .anyMatch(lesson -> lesson.getStartLessonDate().getTime().toString().equals(currentDate.getTime().toString()))) {
+                .anyMatch(lesson -> lesson.getStartLessonDate().toString()
+                        .equals(currentDate.toString()))) {
 
             //берем предмет, который нужно провести
             Subject currentSubject = student.getStudyPlan().get(0);
+            if(isPlanComplete(student,currentSubject.getNameOfSubject())){
+                currentSubject=student.getStudyPlan().get(1);
+            }
+
 
             //отобрать преподов по предмету
             List<Teacher> freeTeacher=getFreeTeachers(currentSubject.getNameOfSubject());
@@ -97,9 +102,9 @@ public class Generating {
                 freeTeacher.get(0).editTimeTable(lesson);
                 freeAuditoriums.get(0).editTimeTable(lesson);
             } else {
-                passageOfTime();
-                generatingNewLesson();
+                //перебирать время до конца недели
             }
+            passageOfTime();
         }
         //иначе нужно взять другое время
         else {
@@ -120,8 +125,8 @@ public class Generating {
         for (Teacher teacher :
                 freeTeacher) {
             if (teacher.getTimeTable().getLessons().stream()
-                    .anyMatch(lesson -> lesson.getStartLessonDate().getTime().toString()
-                            .equals(currentDate.getTime().toString()))) {
+                    .anyMatch(lesson -> lesson.getStartLessonDate().toString()
+                            .equals(currentDate.toString()))) {
                 freeTeacher.remove(teacher);
             }
         }
@@ -133,11 +138,15 @@ public class Generating {
         for (Auditorium auditorium:
                 auditoriums) {
             if (!auditorium.getTimeTable().getLessons().stream()
-                    .anyMatch(lesson -> lesson.getStartLessonDate().getTime().toString()
-                            .equals(currentDate.getTime().toString()))) {
+                    .anyMatch(lesson -> lesson.getStartLessonDate().toString()
+                            .equals(currentDate.toString()))) {
                 freeAuditoriums.add(auditorium);
             }
         }
         return freeAuditoriums;
+    }
+
+    public boolean isPlanComplete(Student student, String subjectTitle){
+       return student.getTimeTable().getLessons().stream().anyMatch(lesson -> lesson.getSubject().getNameOfSubject().equals(subjectTitle));
     }
 }

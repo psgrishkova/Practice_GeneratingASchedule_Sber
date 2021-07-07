@@ -3,7 +3,6 @@ package com.example.Practice_GeneratingASchedule;
 import com.github.javafaker.Faker;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class Data {
@@ -19,20 +18,27 @@ public class Data {
 
     void dataFilling() {
         Faker faker = new Faker();
+        int n = 2;
 
         students = new ArrayList<>();
         teachers = new ArrayList<>();
         subjects = new ArrayList<>();
         auditoriums = new ArrayList<>();
-
-        students.add(new Student(faker.name().name()));
-        teachers.add(new Teacher(faker.name().name()));
+        for (int i = 0; i < n; i++) {
+            students.add(new Student(faker.name().name()));
+            teachers.add(new Teacher(faker.name().name()));
+            auditoriums.add(new Auditorium());
+        }
         subjects.add(new Subject("Math"));
-        auditoriums.add(new Auditorium());
+        subjects.add(new Subject("Geom"));
+        subjects.add(new Subject("IS"));
 
-        students.get(0).setStudyPlan(subjects.get(0));
-        teachers.get(0).setSubjects(subjects.get(0));
 
+        students.get(0).setStudyPlan(subjects.get(0),subjects.get(1));
+        students.get(1).setStudyPlan(subjects.get(0),subjects.get(2));
+
+        teachers.get(0).setSubjects(subjects.get(0),subjects.get(2));
+        teachers.get(1).setSubjects(subjects.get(0),subjects.get(1));
 
 
         //System.out.println();

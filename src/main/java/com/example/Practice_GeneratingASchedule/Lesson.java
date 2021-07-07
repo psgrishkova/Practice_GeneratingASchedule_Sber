@@ -1,11 +1,12 @@
 package com.example.Practice_GeneratingASchedule;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class Lesson {
-    private Calendar startLessonDate;
+    private LocalDateTime startLessonDate;
     private Auditorium auditorium;
     private List<Student> students;
     private Teacher teacher;
@@ -14,7 +15,7 @@ public class Lesson {
     public Lesson() {
     }
 
-    public Calendar getStartLessonDate() {
+    public LocalDateTime getStartLessonDate() {
         return startLessonDate;
     }
 
@@ -34,7 +35,7 @@ public class Lesson {
         return subject;
     }
 
-    public void setStartLessonDate(Calendar startLessonDate) {
+    public void setStartLessonDate(LocalDateTime startLessonDate) {
         this.startLessonDate = startLessonDate;
     }
 
@@ -53,7 +54,7 @@ public class Lesson {
     }
 
     public String toString(){
-        String result="time:"+startLessonDate.getTime().toString()+"\n"
+        String result="time:"+startLessonDate.toString()+"\n"
                 +"auditorium №: "+auditorium.getAuditoriumNumber()+"\n"+
                 "TeacherName: "+teacher.getTeacherName()+"\n"+"Subject: "+subject.getNameOfSubject()+"\n"
                 +"Studs:";
