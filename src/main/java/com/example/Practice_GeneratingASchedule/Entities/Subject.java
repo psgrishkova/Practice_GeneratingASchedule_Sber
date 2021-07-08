@@ -1,8 +1,8 @@
-package com.example.Practice_GeneratingASchedule;
+package com.example.Practice_GeneratingASchedule.Entities;
 
 public class Subject {
-    private String nameOfSubject;
-    private static int subjectID=0;
+    private final String nameOfSubject;
+    private static int subjectID = 0;
 
     public Subject(String nameOfSubject) {
         this.nameOfSubject = nameOfSubject;
@@ -17,7 +17,7 @@ public class Subject {
         return subjectID;
     }
 
-    public String toString(){
-        return nameOfSubject+" "+subjectID;
+    public String toString() {
+        return nameOfSubject + " " + subjectID;
     }
 }
