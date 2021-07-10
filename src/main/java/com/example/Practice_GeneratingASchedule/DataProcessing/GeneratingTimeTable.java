@@ -46,8 +46,7 @@ public class GeneratingTimeTable implements Generating {
     }
 
     private int selectUsersByTime(List<User> users) {
-        List<User> testUsers=new ArrayList<>();
-        testUsers.addAll(users);
+        List<User> testUsers = new ArrayList<>(users);
         testUsers.removeIf(user -> user.getTimeTable().getLessons().stream()
                 .anyMatch(lesson -> lesson.getStartLessonDate().toString()
                         .equals(currentDate.toString())));
@@ -83,7 +82,7 @@ public class GeneratingTimeTable implements Generating {
         studentsWhoNeedATimeTable.addAll(data.getStudents());
         while (studentsWhoNeedATimeTable.size() != 0) {
             User student = studentsWhoNeedATimeTable.get(0);
-            currentDate=data.getStartDay();
+            currentDate = data.getStartDay();
             int countOfSubjects = student.getSubjects().size();
             if (countOfSubjects != 0) {
                 for (int i = 0; i < countOfSubjects; i++) {

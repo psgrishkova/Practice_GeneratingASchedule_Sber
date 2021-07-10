@@ -18,28 +18,22 @@ class PracticeGeneratingAScheduleApplicationTests {
     void testingCreatingTimeTable() {
         Data data = new Data(startDay);
         GeneratingTimeTable generatingTimeTable = new GeneratingTimeTable(data);
-        for (User student:
-             data.getStudents()) {
+        for (User student :
+                data.getStudents()) {
             System.out.println(student);
         }
         System.out.println();
 
-      //  LocalDateTime calendar = LocalDateTime.of(2021, 7, 8, 8, 0, 0);
-      //  generatingTimeTable.setCurrentDate(calendar);
-
         generatingTimeTable.generatingTimeTable();
 
-        int countOfRecords = 0;
         List<User> students = generatingTimeTable.getData().getStudents();
         for (User student : students) {
             List<Lesson> lessons = student.getTimeTable().getLessons();
             System.out.println(student.getName());
             for (Lesson lesson : lessons) {
                 System.out.println(lesson + "\n");
-                countOfRecords++;
             }
         }
-
     }
 
     @Test

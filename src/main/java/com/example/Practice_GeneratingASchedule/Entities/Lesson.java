@@ -37,17 +37,9 @@ public class Lesson {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("time:" + startLessonDate.toString() + "\n"
+        String result = "time:" + startLessonDate.toString() + "\n"
                 + "auditorium №: " + auditorium.getAuditoriumNumber() + "\n" +
-                "TeacherName: " + teacher.getName() + "\n" + "Subject: " + subject.getNameOfSubject() + "\n"
-                + "Studs:");
-       /*
-        for (User s :
-                students) {
-            result.append("\n").append(s.getName());
-        }
-
-        */
-        return result.toString();
+                "TeacherName: " + teacher.getName() + "\n" + "Subject: " + subject.getNameOfSubject();
+        return result;
     }
 }

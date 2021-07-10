@@ -5,8 +5,6 @@ import com.github.javafaker.Faker;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Data {
 
@@ -28,10 +26,6 @@ public class Data {
 
     public List<User> getTeachers() {
         return teachers;
-    }
-
-    public List<Subject> getSubjects() {
-        return subjects;
     }
 
     public List<Auditorium> getAuditoriums() {
@@ -77,16 +71,15 @@ public class Data {
         teachers.get(1).addSubjects(subjects.get(0), subjects.get(1));
         teachers.get(2).addSubjects(subjects.get(1), subjects.get(2), subjects.get(4));
         teachers.get(3).addSubjects(subjects.get(3), subjects.get(4));
-
     }
 
     private void addSubjectsForStudents() {
         List<Integer> subNumbers;
 
-        for (int i = 0; i < students.size(); i++) {
+        for (User student : students) {
             subNumbers = createMas(random.nextInt(subjects.size()) + 1);
-            for (int j = 0; j < subNumbers.size(); j++) {
-                students.get(i).addSubjects(subjects.get(subNumbers.get(j)));
+            for (Integer subNumber : subNumbers) {
+                student.addSubjects(subjects.get(subNumber));
             }
         }
     }
@@ -94,13 +87,12 @@ public class Data {
     private List<Integer> createMas(int length) {
         List<Integer> mass = new ArrayList<>();
         for (int i = 0; i < length; i++) {
-            mass.add(rnd(0, subjects.size()-1));
+            mass.add(rnd(subjects.size() - 1));
         }
         return mass;
     }
 
-    private static int rnd(int min, int max) {
-        max -= min;
-        return (int) (Math.random() * ++max) + min;
+    private static int rnd(int max) {
+        return (int) (Math.random() * ++max);
     }
 }
