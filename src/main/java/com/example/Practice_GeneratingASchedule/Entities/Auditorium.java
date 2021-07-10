@@ -1,15 +1,15 @@
 package com.example.Practice_GeneratingASchedule.Entities;
 
 public class Auditorium {
-    private static int auditoriumNumber = 1;
+    private final int auditoriumNumber;
     private final TimeTable timeTable;
 
-    public Auditorium() {
-        timeTable = new TimeTable();
-        auditoriumNumber++;
+    public Auditorium(int auditoriumNumber, int timeTableID) {
+        timeTable = new TimeTable(timeTableID);
+        this.auditoriumNumber = auditoriumNumber;
     }
 
-    public static int getAuditoriumNumber() {
+    public int getAuditoriumNumber() {
         return auditoriumNumber;
     }
 

@@ -1,82 +1,65 @@
 package com.example.Practice_GeneratingASchedule;
 
 import com.example.Practice_GeneratingASchedule.DataProcessing.Data;
-import com.example.Practice_GeneratingASchedule.DataProcessing.Generating;
+import com.example.Practice_GeneratingASchedule.DataProcessing.GeneratingTimeTable;
+import com.example.Practice_GeneratingASchedule.DataProcessing.KPI;
 import com.example.Practice_GeneratingASchedule.Entities.*;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@SpringBootTest
+//@SpringBootTest
 class PracticeGeneratingAScheduleApplicationTests {
-    Data data;
-    Generating generating;
-
-
-    @Before
-    void creatingData(){
-        data=new Data();
-
-    }
+    private static final LocalDateTime startDay = LocalDateTime.of(2021, 7, 8, 8, 0);
 
     @Test
-    void testingPassage() {
-        Generating g = new Generating();
-        g.setCurrentDate(LocalDateTime.of(2021, 7, 8, 8, 0, 0));
-        g.setCurrentDate(g.getCurrentDate());
-        g.passageOfTime();
-        LocalDateTime testCalendar = LocalDateTime.of(2021, 7, 8, 9, 30, 0);
-        System.out.println(g.getCurrentDate());
-        System.out.println(testCalendar);
-        Assert.assertEquals(testCalendar.toString(), g.getCurrentDate().toString());
-    }
+    void testingCreatingTimeTable() {
+        Data data = new Data(startDay);
+        GeneratingTimeTable generatingTimeTable = new GeneratingTimeTable(data);
+        for (User student:
+             data.getStudents()) {
+            System.out.println(student);
+        }
+        System.out.println();
 
-    @Test
-    void testingFreeTeachers() {
-        Data data = new Data();
-        Generating generating = new Generating();
-        generating.setTeachers(data.getTeachers().toArray(Teacher[]::new));
-        Assert.assertEquals(2, generating.getUsersBySubject("Math",generating.getTeachers()).size());
-    }
+      //  LocalDateTime calendar = LocalDateTime.of(2021, 7, 8, 8, 0, 0);
+      //  generatingTimeTable.setCurrentDate(calendar);
 
-    @Test
-    void testingFreeAuditoriums() {
-        Data data = new Data();
-        Generating generating = new Generating();
-        generating.setAuditoriums(data.getAuditoriums().get(0));
+        generatingTimeTable.generatingTimeTable();
 
-        Assert.assertEquals(1, generating.getFreeAuditoriums().size());
-    }
-
-    @Test
-    void testingNewCreating() {
-        Data data = new Data();
-        Generating generating = new Generating();
-
-        generating.setTeachers(data.getTeachers().toArray(Teacher[]::new));
-        generating.setStudents(data.getStudents().toArray(Student[]::new));
-        generating.setAuditoriums(data.getAuditoriums().toArray(Auditorium[]::new));
-
-        LocalDateTime calendar = LocalDateTime.of(2021, 7, 8, 8, 0, 0);
-        generating.setCurrentDate(calendar);
-
-        generating.mainCreate();
-
-        int countOfRecords=0;
-        List<User> students=generating.getStudents();
-        for (int j=0;j<students.size();j++) {
-            List<Lesson> lessons = students.get(j).getTimeTable().getLessons();
-            System.out.println(students.get(j).getName());
-            for (int i = 0; i < lessons.size(); i++) {
-                System.out.println(lessons.get(i) + "\n");
+        int countOfRecords = 0;
+        List<User> students = generatingTimeTable.getData().getStudents();
+        for (User student : students) {
+            List<Lesson> lessons = student.getTimeTable().getLessons();
+            System.out.println(student.getName());
+            for (Lesson lesson : lessons) {
+                System.out.println(lesson + "\n");
                 countOfRecords++;
             }
         }
 
-        Assert.assertEquals(4,countOfRecords);
+    }
+
+    @Test
+    void testingDates() {
+        Data data = new Data(startDay);
+        GeneratingTimeTable generatingTimeTable = new GeneratingTimeTable(data);
+
+        generatingTimeTable.generatingTimeTable();
+        KPI kpi = new KPI(generatingTimeTable.getData());
+
+        Assert.assertNotNull(kpi);
+    }
+
+    @Test
+    void testingCreatingData() {
+        Data data = new Data(startDay);
+        for (User student :
+                data.getStudents()) {
+            System.out.println(student);
+        }
+        Assert.assertNotNull(data);
     }
 }

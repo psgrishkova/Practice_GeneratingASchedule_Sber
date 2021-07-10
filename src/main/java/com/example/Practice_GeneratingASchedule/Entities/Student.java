@@ -6,23 +6,19 @@ import java.util.List;
 
 public class Student implements User {
     private final String name;
-    private static int stud_id = 600;
+    private final int stud_id;
     private final List<Subject> subjects;
     private final TimeTable timeTable;
 
-    public Student(String name) {
+    public Student(String name, int stud_id, int timeTableID) {
         this.name = name;
-        stud_id++;
+        this.stud_id = stud_id;
         subjects = new ArrayList<>();
-        timeTable = new TimeTable();
+        timeTable = new TimeTable(timeTableID);
     }
 
     public String getName() {
         return name;
-    }
-
-    public static int getStud_id() {
-        return stud_id;
     }
 
     public List<Subject> getSubjects() {

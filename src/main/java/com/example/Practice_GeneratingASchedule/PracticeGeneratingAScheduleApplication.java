@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PracticeGeneratingAScheduleApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PracticeGeneratingAScheduleApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PracticeGeneratingAScheduleApplication.class, args);
+    }
 
 }

@@ -5,24 +5,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class Teacher implements User {
-    private static int teacherID = 0;
+    private final int teacherID;
     private final String teacherName;
     private final List<Subject> subjects;
     private final TimeTable timeTable;
 
-    public Teacher(String teacherName) {
-        teacherID++;
+    public Teacher(String teacherName, int teacherID, int timeTableID) {
+        this.teacherID = teacherID;
         this.teacherName = teacherName;
         subjects = new ArrayList<>();
-        timeTable = new TimeTable();
+        timeTable = new TimeTable(timeTableID);
     }
 
     public void addSubjects(Subject... subjects) {
         Collections.addAll(this.subjects, subjects);
-    }
-
-    public static int getTeacherID() {
-        return teacherID;
     }
 
     public String getName() {

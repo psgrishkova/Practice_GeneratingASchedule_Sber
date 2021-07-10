@@ -2,19 +2,15 @@ package com.example.Practice_GeneratingASchedule.Entities;
 
 public class Subject {
     private final String nameOfSubject;
-    private static int subjectID = 0;
+    private final int subjectID;
 
-    public Subject(String nameOfSubject) {
+    public Subject(String nameOfSubject, int subjectID) {
         this.nameOfSubject = nameOfSubject;
-        subjectID++;
+        this.subjectID = subjectID;
     }
 
     public String getNameOfSubject() {
         return nameOfSubject;
-    }
-
-    public static int getSubjectID() {
-        return subjectID;
     }
 
     public String toString() {
