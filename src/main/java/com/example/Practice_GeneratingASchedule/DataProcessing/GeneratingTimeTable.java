@@ -1,14 +1,16 @@
 package com.example.Practice_GeneratingASchedule.DataProcessing;
 
-import com.example.Practice_GeneratingASchedule.Entities.*;
+import com.example.Practice_GeneratingASchedule.Entities.Auditorium;
+import com.example.Practice_GeneratingASchedule.Entities.Lesson;
+import com.example.Practice_GeneratingASchedule.Entities.Subject;
+import com.example.Practice_GeneratingASchedule.Entities.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GeneratingTimeTable implements Generating {
+public class GeneratingTimeTable implements GeneratorImpl {
     private LocalDateTime currentDate;
     Data data;
     private final List<User> studentsWhoNeedATimeTable;
@@ -23,10 +25,6 @@ public class GeneratingTimeTable implements Generating {
     @Override
     public Data getData() {
         return data;
-    }
-
-    public void setCurrentDate(LocalDateTime currentDate) {
-        this.currentDate = currentDate;
     }
 
     private void passageOfTime() {
@@ -45,14 +43,6 @@ public class GeneratingTimeTable implements Generating {
                 .collect(Collectors.toList());
     }
 
-    private int selectUsersByTime(List<User> users) {
-        List<User> testUsers = new ArrayList<>(users);
-        testUsers.removeIf(user -> user.getTimeTable().getLessons().stream()
-                .anyMatch(lesson -> lesson.getStartLessonDate().toString()
-                        .equals(currentDate.toString())));
-        return testUsers.size();
-    }
-
     private List<Auditorium> getFreeAuditoriums() {
         List<Auditorium> freeAuditoriums = new ArrayList<>();
         for (Auditorium auditorium :
@@ -66,11 +56,23 @@ public class GeneratingTimeTable implements Generating {
         return freeAuditoriums;
     }
 
-    private void setFreeTime(List<User> students, List<User> teachers) {
-        if (selectUsersByTime(students) == 0 || selectUsersByTime(teachers) == 0) {
+    private List<User> selectUsersByTime(List<User> users) {
+        List<User> testUsers = new ArrayList<>(users);
+        testUsers.removeIf(user -> user.getTimeTable().getLessons().stream()
+                .anyMatch(lesson -> lesson.getStartLessonDate().toString()
+                        .equals(currentDate.toString())));
+        return testUsers;
+    }
+
+
+    private List<User> setFreeTime(List<User> users) {
+        List<User> testUsers = new ArrayList<>(users);
+        testUsers = selectUsersByTime(testUsers);
+        if (testUsers.size() == 0) {
             passageOfTime();
-            setFreeTime(students, teachers);
+            testUsers = setFreeTime(users);
         }
+        return testUsers;
     }
 
     private boolean isSubjectInTimeTable(User student, Subject subject) {
@@ -101,7 +103,8 @@ public class GeneratingTimeTable implements Generating {
         List<User> teachers = selectUsersBySubject(currentSubject.getNameOfSubject(), data.getTeachers());
 
         //найти время, удобное для всех
-        setFreeTime(students, teachers);
+        students = setFreeTime(students);
+        teachers = setFreeTime(teachers);
 
         //найти сободные аудитории
         List<Auditorium> auditoriums = getFreeAuditoriums();
@@ -120,105 +123,3 @@ public class GeneratingTimeTable implements Generating {
         passageOfTime();
     }
 }
-
-
-
-
-/*
-кладбище методов
-
-
-
-    private List<User> searchingSubjectInTimeTable(List<User> users, Subject subject) {
-        users.removeIf(user -> user.getTimeTable().getLessons().stream()
-                .anyMatch(lesson -> lesson.getSubject().getNameOfSubject().equals(subject.getNameOfSubject())));
-        return users;
-    }
-
-    public boolean isPlanComplete(Student student, String subjectTitle) {
-        return student.getTimeTable().getLessons().stream().anyMatch(lesson -> lesson.getSubject().getNameOfSubject().equals(subjectTitle));
-    }
-
-    public void getNeedSubject() {
-
-        Subject currentSubject = student.getSubjects().get(0);
-        //если у студента уже есть этот предмет в расписании, берем другой
-        if (isPlanComplete(student, currentSubject.getNameOfSubject())) {
-            currentSubject = student.getSubjects().get(1);
-        }
-
-        return currentSubject;
-    }
-
-
-    public void generatingNewLesson() {
-        studentsWhoNeedATimeTable = students;
-        //while (studentsWhoNeedATimeTable.size() != 0) {
-        //берем студента
-        Student student = studentsWhoNeedATimeTable.get(0);
-        //берем предмет, который нужно провести
-
-
-        //находим студентов, которым нужна та же пара и они свободны в заданное время
-        List<Student> freeStudents = getFreeStudents(currentSubject.getNameOfSubject());
-
-        //отобрать преподов по предмету
-        List<Teacher> freeTeacher = getFreeTeachers(currentSubject.getNameOfSubject());
-
-        //теперь нужно найти аудитории, надо проверить, есть ли на это время там занятие
-        List<Auditorium> freeAuditoriums = getFreeAuditoriums();
-
-
-        //если препод и аудитория нашлись, то можно добавлять в расписание
-        if (freeTeacher.size() != 0 && freeAuditoriums.size() != 0) {
-            Lesson lesson = new Lesson(freeTeacher.get(0), currentSubject, freeStudents.toArray(Student[]::new));
-            lesson.setStartLessonDate(currentDate);
-            lesson.setAuditorium(freeAuditoriums.get(0));
-
-            //созданную пару добавили всем в расписание
-            for (Student s :
-                    students) {
-                s.addLessonsInTimeTable(lesson);
-            }
-            freeTeacher.get(0).addLessonsInTimeTable(lesson);
-            freeAuditoriums.get(0).editTimeTable(lesson);
-        } else {
-            //перебирать время до конца недели
-        }
-        passageOfTime();
-        // }
-        //иначе нужно взять другое время
-        // else {
-        //     passageOfTime();
-        //      generatingNewLesson();
-        //   }
-        //}
-    }
-
-
-
-    public List<Student> getFreeStudents(String currentSubjectName) {
-        List<Student> freeStudents = studentsWhoNeedATimeTable.stream()
-                .filter(student -> student.getSubjects().stream()
-                        .anyMatch(subject -> subject.getNameOfSubject().equals(currentSubjectName))).collect(Collectors.toList());
-        //исключить из списка студентов, у которых занято это время
-        freeStudents.removeIf(student -> student.getTimeTable().getLessons().stream()
-                .anyMatch(lesson -> lesson.getStartLessonDate().toString()
-                        .equals(currentDate.toString())));
-        return freeStudents;
-    }
-
-    public List<Teacher> getFreeTeachers(String currentSubjectName) {
-        List<Teacher> freeTeacher = teachers.stream()
-                .filter(teacher -> teacher.getSubjects().stream()
-                        .anyMatch(subject -> subject.getNameOfSubject().equals(currentSubjectName))).collect(Collectors.toList());
-        //исключить из списка преподов, у которых занято это время
-        freeTeacher.removeIf(teacher -> teacher.getTimeTable().getLessons().stream()
-                .anyMatch(lesson -> lesson.getStartLessonDate().toString()
-                        .equals(currentDate.toString())));
-        return freeTeacher;
-    }
-
-
-
- */

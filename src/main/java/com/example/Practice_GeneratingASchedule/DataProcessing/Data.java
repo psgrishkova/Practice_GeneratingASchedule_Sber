@@ -1,23 +1,27 @@
 package com.example.Practice_GeneratingASchedule.DataProcessing;
 
-import com.example.Practice_GeneratingASchedule.Entities.*;
-import com.github.javafaker.Faker;
+import com.example.Practice_GeneratingASchedule.Entities.Auditorium;
+import com.example.Practice_GeneratingASchedule.Entities.Subject;
+import com.example.Practice_GeneratingASchedule.Entities.User;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Data {
-
-    Random random = new Random();
-    private List<User> students;
-    private List<User> teachers;
-    private List<Subject> subjects;
-    private List<Auditorium> auditoriums;
+    private final List<User> students;
+    private final List<User> teachers;
+    private final List<Subject> subjects;
+    private final List<Auditorium> auditoriums;
     private final LocalDateTime startDay;
 
     public Data(LocalDateTime startDay) {
         this.startDay = startDay;
-        dataFilling();
+        students = new ArrayList<>();
+        teachers = new ArrayList<>();
+        subjects = new ArrayList<>();
+        auditoriums = new ArrayList<>();
     }
 
     public List<User> getStudents() {
@@ -36,7 +40,28 @@ public class Data {
         return startDay;
     }
 
-    void dataFilling() {
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void editStudents(User... students) {
+        Collections.addAll(this.students, students);
+    }
+
+    public void editTeachers(User... teachers) {
+        Collections.addAll(this.teachers, teachers);
+    }
+
+    public void editAuditoriums(Auditorium... auditoriums) {
+        Collections.addAll(this.auditoriums, auditoriums);
+    }
+
+    public void editSubjects(Subject... subjects) {
+        Collections.addAll(this.subjects, subjects);
+    }
+
+/*
+    void testingData() {
         Faker faker = new Faker();
         //количество студентов
         int n = 20;
@@ -46,10 +71,7 @@ public class Data {
         int teachersStartID = 100;
         int timeTableStartID = 0;
 
-        students = new ArrayList<>();
-        teachers = new ArrayList<>();
-        subjects = new ArrayList<>();
-        auditoriums = new ArrayList<>();
+
         for (int i = 0; i < n; i++) {
             students.add(new Student(faker.name().name(), ++studentsStartID, ++timeTableStartID));
         }
@@ -77,7 +99,7 @@ public class Data {
         List<Integer> subNumbers;
 
         for (User student : students) {
-            subNumbers = createMas(random.nextInt(subjects.size()) + 1);
+            subNumbers = createMas( new Random().nextInt(subjects.size()) + 1);
             for (Integer subNumber : subNumbers) {
                 student.addSubjects(subjects.get(subNumber));
             }
@@ -95,4 +117,5 @@ public class Data {
     private static int rnd(int max) {
         return (int) (Math.random() * ++max);
     }
+    */
 }

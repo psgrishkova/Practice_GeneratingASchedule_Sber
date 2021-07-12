@@ -4,52 +4,115 @@ import com.example.Practice_GeneratingASchedule.DataProcessing.Data;
 import com.example.Practice_GeneratingASchedule.DataProcessing.GeneratingTimeTable;
 import com.example.Practice_GeneratingASchedule.DataProcessing.KPI;
 import com.example.Practice_GeneratingASchedule.Entities.*;
+import com.github.javafaker.Faker;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 
 //@SpringBootTest
 class PracticeGeneratingAScheduleApplicationTests {
     private static final LocalDateTime startDay = LocalDateTime.of(2021, 7, 8, 8, 0);
+    private Data data;
 
-    @Test
-    void testingCreatingTimeTable() {
-        Data data = new Data(startDay);
-        GeneratingTimeTable generatingTimeTable = new GeneratingTimeTable(data);
-        for (User student :
-                data.getStudents()) {
-            System.out.println(student);
+    void testingData() {
+        data = new Data(startDay);
+        Faker faker = new Faker();
+        //количество студентов
+        int n = 50;
+        int subjectsStartID = 0;
+        int auditoriumsStartID = 0;
+        int studentsStartID = 600;
+        int teachersStartID = 100;
+        int timeTableStartID = 0;
+
+
+        for (int i = 0; i < n; i++) {
+            data.editStudents(new Student(faker.name().name(), ++studentsStartID, ++timeTableStartID));
         }
-        System.out.println();
 
-        generatingTimeTable.generatingTimeTable();
+        for (int i = 0; i < 4; i++) {
+            data.editTeachers(new Teacher(faker.name().name(), ++teachersStartID, ++timeTableStartID));
+            data.editAuditoriums(new Auditorium(++auditoriumsStartID, ++timeTableStartID));
+        }
 
-        List<User> students = generatingTimeTable.getData().getStudents();
-        for (User student : students) {
-            List<Lesson> lessons = student.getTimeTable().getLessons();
-            System.out.println(student.getName());
-            for (Lesson lesson : lessons) {
-                System.out.println(lesson + "\n");
+        data.editSubjects(new Subject("Math", ++subjectsStartID));
+        data.editSubjects(new Subject("Geom", ++subjectsStartID));
+        data.editSubjects(new Subject("Information Security", ++subjectsStartID));
+        data.editSubjects(new Subject("OOP", ++subjectsStartID));
+        data.editSubjects(new Subject("DB", ++subjectsStartID));
+        data.editSubjects(new Subject("C#", ++subjectsStartID));
+        data.editSubjects(new Subject("Russian", ++subjectsStartID));
+        data.editSubjects(new Subject("Assembler", ++subjectsStartID));
+        data.editSubjects(new Subject("Web", ++subjectsStartID));
+
+
+        addSubjectsForStudents();
+
+        data.getTeachers().get(0).addSubjects(data.getSubjects().get(0), data.getSubjects().get(3), data.getSubjects().get(5));
+        data.getTeachers().get(1).addSubjects(data.getSubjects().get(0), data.getSubjects().get(1), data.getSubjects().get(6), data.getSubjects().get(8));
+        data.getTeachers().get(2).addSubjects(data.getSubjects().get(1), data.getSubjects().get(2), data.getSubjects().get(4));
+        data.getTeachers().get(3).addSubjects(data.getSubjects().get(3), data.getSubjects().get(4), data.getSubjects().get(7));
+    }
+
+    private void addSubjectsForStudents() {
+        List<Integer> subNumbers;
+
+        for (User student : data.getStudents()) {
+            subNumbers = createMas(new Random().nextInt(data.getSubjects().size()) + 1);
+            for (Integer subNumber : subNumbers) {
+                student.addSubjects(data.getSubjects().get(subNumber));
             }
         }
     }
 
+    private List<Integer> createMas(int length) {
+        List<Integer> mass = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            mass.add(rnd(data.getSubjects().size() - 1));
+        }
+        return mass;
+    }
+
+    private static int rnd(int max) {
+        return (int) (Math.random() * ++max);
+    }
+
     @Test
-    void testingDates() {
-        Data data = new Data(startDay);
+    void testingCreatingTimeTable() {
+        testingData();
+        GeneratingTimeTable generatingTimeTable = new GeneratingTimeTable(data);
+
+        generatingTimeTable.generatingTimeTable();
+        for (Auditorium a :
+                generatingTimeTable.getData().getAuditoriums()) {
+            for (Lesson l :
+                    a.getTimeTable().getLessons()) {
+                System.out.println(l + "\n");
+            }
+            System.out.println();
+            System.out.println();
+        }
+    }
+
+    @Test
+    void testingKPI() {
+        testingData();
         GeneratingTimeTable generatingTimeTable = new GeneratingTimeTable(data);
 
         generatingTimeTable.generatingTimeTable();
         KPI kpi = new KPI(generatingTimeTable.getData());
-
+        System.out.println(kpi.getKpi());
         Assert.assertNotNull(kpi);
     }
 
     @Test
     void testingCreatingData() {
-        Data data = new Data(startDay);
+        testingData();
         for (User student :
                 data.getStudents()) {
             System.out.println(student);
