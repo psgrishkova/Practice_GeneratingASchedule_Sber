@@ -3,7 +3,6 @@ package com.example.Practice_GeneratingASchedule.DataProcessing;
 import com.example.Practice_GeneratingASchedule.Entities.Lesson;
 import com.example.Practice_GeneratingASchedule.Entities.User;
 
-
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -25,7 +24,7 @@ public class KPI {
 
     private void CalculateKpi() {
         int countOfStudyingDays = getCountOfStudyingDays();
-        kpi = 100-((getMaxCountOfStudyingDays() / countOfStudyingDays) - countOfStudyingDays);
+        kpi = 100 - ((getMaxCountOfStudyingDays() / countOfStudyingDays) - countOfStudyingDays);
     }
 
     private int getCountOfStudyingDays() {
@@ -37,10 +36,9 @@ public class KPI {
                 dates.add(lesson.getStartLessonDate());
             }
         }
-        dates=dates.stream().distinct().collect(Collectors.toList());
+        dates = dates.stream().distinct().collect(Collectors.toList());
         Collections.sort(dates);
-        int res=dates.get(dates.size() - 1).getDayOfYear()-data.getStartDay().getDayOfYear()  + 1;
-        return res;
+        return dates.get(dates.size() - 1).getDayOfYear() - data.getStartDay().getDayOfYear() + 1;
     }
 
     private int getMaxCountOfStudyingDays() {

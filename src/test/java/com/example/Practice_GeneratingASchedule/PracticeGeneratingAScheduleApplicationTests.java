@@ -106,8 +106,8 @@ class PracticeGeneratingAScheduleApplicationTests {
 
         generatingTimeTable.generatingTimeTable();
         KPI kpi = new KPI(generatingTimeTable.getData());
-        System.out.println(kpi.getKpi()+"%");
-        Assert.assertNotNull(kpi);
+        System.out.println(kpi.getKpi() + "%");
+        Assert.assertTrue(kpi.getKpi()<100);
     }
 
     @Test
