@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class KPI {
     private int kpi;
@@ -24,7 +25,7 @@ public class KPI {
 
     private void CalculateKpi() {
         int countOfStudyingDays = getCountOfStudyingDays();
-        kpi = (100 * getMaxCountOfStudyingDays() / countOfStudyingDays) - (100 * countOfStudyingDays);
+        kpi = 100-((getMaxCountOfStudyingDays() / countOfStudyingDays) - countOfStudyingDays);
     }
 
     private int getCountOfStudyingDays() {
@@ -36,8 +37,10 @@ public class KPI {
                 dates.add(lesson.getStartLessonDate());
             }
         }
+        dates=dates.stream().distinct().collect(Collectors.toList());
         Collections.sort(dates);
-        return data.getStartDay().getDayOfYear() - dates.get(dates.size() - 1).getDayOfYear() + 1;
+        int res=dates.get(dates.size() - 1).getDayOfYear()-data.getStartDay().getDayOfYear()  + 1;
+        return res;
     }
 
     private int getMaxCountOfStudyingDays() {
