@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Teacher implements User {
+public class Teacher extends Lesson implements User {
     private final int teacherID;
     private final String teacherName;
     private final List<Subject> subjects;
@@ -37,6 +37,7 @@ public class Teacher implements User {
         timeTable.addLessons(lessons);
     }
 
+    /*
     public String toString() {
         StringBuilder res = new StringBuilder(teacherName + " " + teacherID + ": ");
         for (Subject s :
@@ -44,6 +45,23 @@ public class Teacher implements User {
             res.append(s.getNameOfSubject()).append("\t");
         }
 
+        return res.toString();
+    }
+
+     */
+
+    @Override
+    public String toString() {
+        char dm=(char)34;
+        StringBuilder res;
+        res = new StringBuilder("{" +
+                dm + "name" + dm + ":" + dm + teacherName + dm + "," +
+                dm + "id" + dm +":"+dm+ teacherID + dm + "," +
+                dm + "subjects" + dm + ":["+subjects.get(0));
+        for (int i=1;i<subjects.size();i++){
+            res.append(",").append(subjects.get(i));
+        }
+        res.append("],").append(dm).append("timeTableId").append(dm).append(":").append(timeTable.getTimeTableID()).append("}");
         return res.toString();
     }
 }

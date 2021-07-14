@@ -1,6 +1,6 @@
 package com.example.Practice_GeneratingASchedule.Entities;
 
-public class Auditorium {
+public class Auditorium extends Lesson {
     private final int auditoriumNumber;
     private final TimeTable timeTable;
 
@@ -19,5 +19,14 @@ public class Auditorium {
 
     public void editTimeTable(Lesson... lessons) {
         timeTable.addLessons(lessons);
+    }
+
+    @Override
+    public String toString(){
+        char dm=(char)34;
+
+        return "{"+
+                dm+"number"+dm+":"+auditoriumNumber+
+                ","+dm+"timeTableId"+dm+":"+timeTable.getTimeTableID()+"}";
     }
 }

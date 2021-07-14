@@ -5,18 +5,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Lesson {
+public class Lesson extends TimeTable {
     private LocalDateTime startLessonDate;
     private Auditorium auditorium;
-    private final List<User> students;
-    private final User teacher;
-    private final Subject subject;
+    private  List<User> students;
+    private  User teacher;
+    private  Subject subject;
 
     public Lesson(User teacher, Subject subject, User... students) {
         this.teacher = teacher;
         this.subject = subject;
         this.students = new ArrayList<>();
         Collections.addAll(this.students, students);
+    }
+
+    public Lesson() {
     }
 
     public LocalDateTime getStartLessonDate() {
@@ -37,9 +40,8 @@ public class Lesson {
 
     @Override
     public String toString() {
-        String result = "time:" + startLessonDate.toString() + "\n"
+        return "time:" + startLessonDate.toString() + "\n"
                 + "auditorium №: " + auditorium.getAuditoriumNumber() + "\n" +
                 "TeacherName: " + teacher.getName() + "\n" + "Subject: " + subject.getNameOfSubject();
-        return result;
     }
 }

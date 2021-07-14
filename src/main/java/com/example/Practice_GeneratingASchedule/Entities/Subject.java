@@ -13,7 +13,15 @@ public class Subject {
         return nameOfSubject;
     }
 
+    @Override
     public String toString() {
-        return nameOfSubject + " " + subjectID;
+        char dm=(char)34;
+        return "{"+
+                dm+"id"+dm+":"+dm+subjectID+dm+","+
+                dm+"name"+dm+":"+dm+nameOfSubject+dm+"}";
+    }
+
+    public int getSubjectID() {
+        return subjectID;
     }
 }

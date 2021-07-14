@@ -6,13 +6,20 @@ import java.util.Collections;
 import java.util.List;
 
 public class TimeTable {
-    private final int timeTableID;
-    private final List<Lesson> lessons;
+    private  int timeTableID;
+    private  List<Lesson> lessons;
 
     public TimeTable(int timeTableID, Lesson... lessons) {
         this.timeTableID = timeTableID;
         this.lessons = new ArrayList<>();
         addLessons(lessons);
+    }
+
+    public TimeTable() {
+    }
+
+    public int getTimeTableID() {
+        return timeTableID;
     }
 
     public List<Lesson> getLessons() {

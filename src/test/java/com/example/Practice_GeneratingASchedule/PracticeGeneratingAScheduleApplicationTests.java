@@ -1,11 +1,13 @@
 package com.example.Practice_GeneratingASchedule;
 
 import com.example.Practice_GeneratingASchedule.DataProcessing.Data;
-import com.example.Practice_GeneratingASchedule.DataProcessing.GeneratingTimeTable;
+import com.example.Practice_GeneratingASchedule.DataProcessing.Generator;
+import com.example.Practice_GeneratingASchedule.DataProcessing.GeneratorImpl;
 import com.example.Practice_GeneratingASchedule.DataProcessing.KPI;
 import com.example.Practice_GeneratingASchedule.Entities.*;
 import com.github.javafaker.Faker;
 import org.junit.Assert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ class PracticeGeneratingAScheduleApplicationTests {
     private static final LocalDateTime startDay = LocalDateTime.of(2021, 7, 8, 8, 0);
     private Data data;
 
+    @BeforeEach
     void testingData() {
         data = new Data(startDay);
         Faker faker = new Faker();
@@ -28,16 +31,16 @@ class PracticeGeneratingAScheduleApplicationTests {
         int auditoriumsStartID = 0;
         int studentsStartID = 600;
         int teachersStartID = 100;
-        int timeTableStartID = 0;
+        int timeTableStartID = 1;
 
 
         for (int i = 0; i < n; i++) {
-            data.editStudents(new Student(faker.name().name(), ++studentsStartID, ++timeTableStartID));
+            data.editStudents(new Student(faker.name().name(), ++studentsStartID, timeTableStartID));
         }
 
         for (int i = 0; i < 4; i++) {
-            data.editTeachers(new Teacher(faker.name().name(), ++teachersStartID, ++timeTableStartID));
-            data.editAuditoriums(new Auditorium(++auditoriumsStartID, ++timeTableStartID));
+            data.editTeachers(new Teacher(faker.name().name(), ++teachersStartID, timeTableStartID));
+            data.editAuditoriums(new Auditorium(++auditoriumsStartID, timeTableStartID));
         }
 
         data.editSubjects(new Subject("Math", ++subjectsStartID));
@@ -53,8 +56,8 @@ class PracticeGeneratingAScheduleApplicationTests {
 
         addSubjectsForStudents();
 
-        data.getTeachers().get(0).addSubjects(data.getSubjects().get(0), data.getSubjects().get(3), data.getSubjects().get(5));
-        data.getTeachers().get(1).addSubjects(data.getSubjects().get(0), data.getSubjects().get(1), data.getSubjects().get(6), data.getSubjects().get(8));
+        data.getTeachers().get(0).addSubjects(data.getSubjects().get(0), data.getSubjects().get(1));
+        data.getTeachers().get(1).addSubjects(data.getSubjects().get(2), data.getSubjects().get(5), data.getSubjects().get(6), data.getSubjects().get(8));
         data.getTeachers().get(2).addSubjects(data.getSubjects().get(1), data.getSubjects().get(2), data.getSubjects().get(4));
         data.getTeachers().get(3).addSubjects(data.getSubjects().get(3), data.getSubjects().get(4), data.getSubjects().get(7));
     }
@@ -84,8 +87,7 @@ class PracticeGeneratingAScheduleApplicationTests {
 
     @Test
     void testingCreatingTimeTable() {
-        testingData();
-        GeneratingTimeTable generatingTimeTable = new GeneratingTimeTable(data);
+        Generator generatingTimeTable = new GeneratorImpl(data);
 
         generatingTimeTable.generatingTimeTable();
         for (Auditorium a :
@@ -101,22 +103,17 @@ class PracticeGeneratingAScheduleApplicationTests {
 
     @Test
     void testingKPI() {
-        testingData();
-        GeneratingTimeTable generatingTimeTable = new GeneratingTimeTable(data);
+        Generator generatingTimeTable = new GeneratorImpl(data);
 
         generatingTimeTable.generatingTimeTable();
         KPI kpi = new KPI(generatingTimeTable.getData());
         System.out.println(kpi.getKpi() + "%");
-        Assert.assertTrue(kpi.getKpi()<100);
+        Assert.assertTrue(kpi.getKpi()<=100);
     }
 
     @Test
-    void testingCreatingData() {
-        testingData();
-        for (User student :
-                data.getStudents()) {
-            System.out.println(student);
-        }
-        Assert.assertNotNull(data);
+    void toStringStudents(){
+        CreateJson createJson=new CreateJson(data);
+        System.out.println(createJson.getHttpRequest());
     }
 }
