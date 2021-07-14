@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--    <bean id="generator" class="com.example.Practice_GeneratingASchedule.DataProcessing.GeneratingTimeTable">-->
+
+<!--    </bean>-->
+<!--    <bean id="controller" class="com.example.Practice_GeneratingASchedule.adapters.controller.TimeTableController"></bean>-->
+
+</beans>

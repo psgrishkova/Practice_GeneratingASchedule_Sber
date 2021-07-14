@@ -13,6 +13,10 @@ public interface User {
 
     String getName();
 
+    int getId();
+
+
+    //в этом необходимости нет - toString и так есть в Object
     String toString();
 }
 
