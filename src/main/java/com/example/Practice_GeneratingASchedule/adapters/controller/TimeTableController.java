@@ -19,9 +19,55 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/v1")
 public class TimeTableController {
+    TimeTableRequest timeTableRequest;
+    TimeTableResponse response;
+
+    @GetMapping("getAllStudents")
+    @ResponseBody
+    List<ResourceDTO> getStudents(){
+        return timeTableRequest.getStudents();
+    }
+
+    @GetMapping("getAllTeachers")
+    @ResponseBody
+    List<ResourceDTO> getTeachers(){
+        return timeTableRequest.getTeachers();
+    }
+
+    @GetMapping("getAuditoriums")
+    @ResponseBody
+    List<AuditoriumDTO> getAuditoriums(){
+        return timeTableRequest.getAuditoriums();
+    }
+
+    @GetMapping("getSubjects")
+    @ResponseBody
+    List<SubjectDTO> getSubjects(){
+        return timeTableRequest.getSubjects();
+    }
+
+    @GetMapping("getTimeTable")
+    @ResponseBody
+    TimeTableResponse getTimeTable(){
+        return response;
+    }
+
+    @PostMapping("getStud")
+    @ResponseBody
+    ResourceDTO getStud(@RequestParam String id){
+        return timeTableRequest.getStudents().get(Integer.parseInt(id)-601);
+    }
+
+    @PostMapping("getTeach")
+    @ResponseBody
+    ResourceDTO getTeach(@RequestParam String id){
+        return timeTableRequest.getTeachers().get(Integer.parseInt(id)-101);
+    }
+
     @PostMapping("makeTimeTable")
     @ResponseBody
     TimeTableResponse makeTimeTable(@RequestBody TimeTableRequest request) {
+        this.timeTableRequest=request;
         Data data = new Data(request.getStartDay());
 
         data.editAuditoriums(request.getAuditoriums().stream()
@@ -61,7 +107,7 @@ public class TimeTableController {
         Generator generator = new GeneratorImpl(data); // можно было бы сделать синглтоном, если Data не был бы полем класса
         generator.generatingTimeTable();
 
-        TimeTableResponse response = new TimeTableResponse();
+        response = new TimeTableResponse();
 
         response.setEfficiency(new KPI(data).getKpi());
         List<LessonDTO> schedule = data.getAuditoriums()
